@@ -1,9 +1,10 @@
 angular.module('simon.messages', [])
 
-.controller('uploader', function ($scope, Messages, $window, $location, $http) {
+.controller('uploader', function ($scope, FLIES, $window, $location, $http) {
   //getAll();
   //use getallfunction to send all linkies to the
   // Your code here
+  $scope.user;
 
   $scope.filesChanged = function(elm){
       $scope.files = elm.files
@@ -23,30 +24,47 @@ angular.module('simon.messages', [])
       })
       .success(function(d) {
         console.log(d);
+        // $scope.files = elm.files
+        // $scope.$apply();
+
       })
     }
   $scope.data = {};
+  $scope.user = $window.localStorage.getItem('com.simon-mvp');
+  if (!$scope.user) {
+    $location.path('/signin');
+  }
+
+  $scope.logout = function() {
+    $window.localStorage.setItem('com.simon-mvp', undefined);
+    $location.path('/signin');
+  }
+
+  $scope.getAllFiles = function() {
+    var user = {user: $window.localStorage.getItem('com.simon-mvp')};
+    FLIES.getAll(user)
+    .then(function(data) {
+      console.log('data:', data);
+      $scope.data.files = data;
+    });
+  }
+   $scope.getAllFiles();
+
     //
-  Messages.getAll()
-  .then(function(data) {
-    console.log('data:', data);
-    $scope.data.messages = data;
-  })
-   $scope.title = 'hi';
-   $scope.text = 'hxi';
-   $scope.myFile;
 
 
 
 
 
- $scope.sendfile = function(){
-  console.log('hello');
-  var file = $scope.myFile;
-  var title = 'hi';
-  var text = 'hxi';
-    Messages.uploadFileToUrl(file, title, text).then(console.log('winner', $scope.myFile)).catch(console.log('error'));
-  };
+
+
+ // $scope.sendfile = function(){
+ //  console.log('hello');
+ //  var file = $scope.myFile;
+ //  var title = 'hi';
+ //  var text = 'hxi';
+ //    Messages.uploadFileToUrl(file, title, text).then(console.log('winner', $scope.myFile)).catch(console.log('error'));
+ //  };
 
 
 });

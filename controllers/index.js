@@ -28,7 +28,26 @@ module.exports = {
         });
     }
   },
-  activerUser: {},
+  flies: {
+    post: function(req, res, next) {
+
+      db.User.findOne({
+        where: {username: req.body.user}
+      })
+      .then(function(user) {
+        db.File.findAll({
+          where: {UserId: user.get('id')}
+        })
+        .then(function(files) {
+          if(!files) {
+            next(new Error('no files'));
+          }
+          res.json(files);
+        })
+      })
+    }
+
+  },
 
   users: {
     signin: function(req, res, next) {
@@ -39,7 +58,7 @@ module.exports = {
         if (user === null) {
           next(new Error('User does not exist'));
         } else {
-          if (req.body.password === useruser.get('pd')){
+          if (req.body.password === user.get('pd')){
             //module.exports.activerUser = user;
 
             res.json(req.body.username);
@@ -47,9 +66,7 @@ module.exports = {
             next(new Error('Wrong password'));
           }
         }
-      }).fail(function(error) {
-        next(error);
-      });
+      })
     },
     signup: function(req, res, next) {
       var username = req.body.username;

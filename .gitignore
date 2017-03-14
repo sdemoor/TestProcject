@@ -18,6 +18,7 @@ node_modules/
 db/
 client/lib
 compiled/
+uploads/
 
 # Floobits
 .floo

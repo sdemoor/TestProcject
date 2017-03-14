@@ -68,6 +68,7 @@ app.post('/load/file', function hello(req, res, next) {
 });
 
 
+app.post('/api/files', controller.flies.post);
 
 app.get('/api/messages', controller.messages.get);
 

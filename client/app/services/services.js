@@ -1,13 +1,13 @@
 angular.module('simon.services', [])
 
-.factory('Messages', function ($http) {
+.factory('FLIES', function ($http) {
 
 
-  var getAll = function (message) {
+  var getAll = function (user) {
     return $http({
-      method: 'GET',
-      url: '/api/messages',
-      //data: message
+      method: 'POST',
+      url: '/api/files',
+      data: user
     })
     .then(function (resp) {
       console.log('resp', resp.data);
@@ -16,18 +16,18 @@ angular.module('simon.services', [])
   };
 
 
-  var addOne = function (message) {
-    return $http({
-      method: 'POST',
-      url: '/api/messages',
-      //data: message
+  // var addOne = function (message) {
+  //   return $http({
+  //     method: 'POST',
+  //     url: '/api/messages',
+  //     //data: message
 
-    })
-    .then(function (resp) {
-      return resp
-      console.log(resp)
-   });
-  };
+  //   })
+  //   .then(function (resp) {
+  //     return resp
+  //     console.log(resp)
+  //  });
+  // };
 
 
  var uploadFileToUrl = function(file, title, text, uploadUrl){
@@ -51,9 +51,8 @@ angular.module('simon.services', [])
 
 
   return {
-    getAll: getAll,
-    addOne: addOne,
-    uploadFileToUrl: uploadFileToUrl
+    getAll: getAll
+    //addOne: addOne,
   };
 
 })
@@ -74,7 +73,7 @@ angular.module('simon.services', [])
       data: user
     })
     .then(function (resp) {
-      return resp.data.token;
+      return resp.data;
     });
   };
 

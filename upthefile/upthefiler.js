@@ -23,7 +23,6 @@ module.exports = {
     return `https://storage.googleapis.com/${CLOUD_BUCKET}/${filename}`;
   },
 // [END public_url]
-
 // Express middleware that will automatically pass uploads to Cloud Storage.
 // req.file is processed and will have two new properties:
 // * ``cloudStorageObject`` the object name in cloud storage.

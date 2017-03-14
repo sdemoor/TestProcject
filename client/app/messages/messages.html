@@ -10,9 +10,10 @@
 
   <form
 
-  <div class="link" ng-repeat="message in data.messages">
+  <div class="link" ng-controller="uploader">
+  <h1>{{user}}</h1>
 
-    <div class="title">{{message.text}}</div>
+    <div class="link" class="title">{{message.text}}</div>
    <!--  <a href="{{link.baseUrl}}/{{link.code}}"> --><!-- {{link.baseUrl}}/{{link.code}}</a> -->
 
    </div>
@@ -21,6 +22,26 @@
      <button ng-click="upload()">Upload</button>
      <li ng-repeat="file in files">{{file.name}}</li>
      </form>
+
+<button ng-click="getAllFiles()">get files</button>
+<button ng-click="logout()">LOGOUT</button>
+
+
+   <input type="text" ng-model="search" placeholder"filter" />
+
+  <div class="link" ng-repeat="fil in data.files | filter:search |            orderBy:'created_at'">
+<!--     <img src="./assets/redirect_icon.png"/>
+ -->    <div class="info">
+
+
+    <div class="title">{{fil.filename}}</div>
+    <a href="https://storage.googleapis.com/mvp-ds-s/{{fil.fileid}}">Link to file</a>
+      </div>
+    </div>
+   </div>
+
+
+
 
 
 <!--
