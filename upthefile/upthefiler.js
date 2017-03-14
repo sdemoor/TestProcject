@@ -2,6 +2,9 @@
 
 var Storage = require('@google-cloud/storage');
 var config = require('../config');
+var db = require('../db');
+var controller = require('../controllers');
+
 
 var CLOUD_BUCKET = config.get('CLOUD_BUCKET');
 
@@ -32,33 +35,64 @@ module.exports = {
       return next();
     }
 
-    var gcsname = Date.now() + req.file.originalname;
-    var file = bucket.file(gcsname);
+    bucket.upload(req.file.path, function(err, file) {
+      if (!err) {
+        console.log('success username',  req.body.user);
 
-    var stream = file.createWriteStream({
-      metadata: {
-        contentType: req.file.mimetype
+        var filename = req.file.originalname;
+        var fileId = file.id;
+        db.User.findOne({
+          where: {username:  req.body.user}
+        }).then(function(user){
+          console.log('usernow', user.dataValues.id);
+          db.File.create({
+              UserId: user.get('id'),//controller.activeUser.id,
+              filename: filename,
+              fileid: fileId
+            }).then(function(file) {
+              //res.sendStatus(201);
+          })
+            })
+
+
+    // "zebra.jpg" is now in your bucket.
+      } else {
+        console.log('zebror');
       }
     });
-
-    stream.on('error', function(err)  {
-      console.log('stream error');
-
-      req.file.cloudStorageError = err;
-      next(err);
-    });
-
-    stream.on('finish', function()  {
-            console.log('stream success');
-
-      req.file.cloudStorageObject = gcsname;
-      req.file.cloudStoragePublicUrl = module.exports.getPublicUrl(gcsname);
-      next();
-    });
-
-    stream.end(req.file.cloudStoragePublicUrl);//buffer
   }
 };
+
+  //   var gcsname = req.file.originalname; //Date.now() +
+  //   var file = bucket.file(gcsname);
+
+  //   var stream = file.createWriteStream({
+  //     metadata: {
+  //       contentType: req.file.mimetype
+  //     }
+  //   });
+
+  //   stream.on('error', function(err)  {
+  //     console.log('stream error');
+
+  //     req.file.cloudStorageError = err;
+  //     next(err);
+  //   });
+
+  //   stream.on('finish', function()  {
+  //           console.log('stream success');
+
+  //     req.file.cloudStorageObject = gcsname;
+  //     req.file.cloudStoragePublicUrl = module.exports.getPublicUrl(gcsname);
+  //     //res.redirect(req.file.cloudStoragePublicUrl);
+  //     console.log('public url', req.file.cloudStoragePublicUrl);
+  //     next();
+  //   });
+  //   // console.log('buffer', )
+
+  //   stream.end(req.file.buffer);//buffer
+  // }
+//};
 // [END process]
 
 // Multer handles parsing multipart/form-data requests.

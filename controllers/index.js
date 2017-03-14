@@ -14,12 +14,12 @@ module.exports = {
         });
     },
     post: function (req, res) {
-      db.User.findOrCreate({where: {username: req.body.username}})
+      db.User.findOrCreate({where: {username: req.body.user.user.username}})
         // findOrCreate returns multiple resutls in an array
         // use spread to assign the array to function arguments
         .spread(function(user, created) {
           db.Message.create({
-            userid: user.get('id'),
+            UserId: user.get('id'),
             text: req.body.message,
             roomname: req.body.roomname
           }).then(function(message) {
@@ -28,6 +28,7 @@ module.exports = {
         });
     }
   },
+  activerUser: {},
 
   users: {
     signin: function(req, res, next) {
@@ -38,65 +39,53 @@ module.exports = {
         if (user === null) {
           next(new Error('User does not exist'));
         } else {
-          bcrypt.compare(req.body.password, user.password, function(err, isMatch) {
-            if (err) {
-                  next(new Error('Wrong password'));
-            } else {
-              var token = jwt.encode(user, 'secret');
-              res.json({token: token});
-            }
-          });
+          if (req.body.password === useruser.get('pd')){
+            //module.exports.activerUser = user;
+
+            res.json(req.body.username);
+          } else {
+            next(new Error('Wrong password'));
+          }
         }
-      })
-      .fail(function(error) {
+      }).fail(function(error) {
         next(error);
       });
     },
     signup: function(req, res, next) {
       var username = req.body.username;
       var password = req.body.password;
-      console.log('username:', username);
       db.User.findOne({
         where: {username: req.body.username}
-      }).then(function(user) {
-        if (user) {
-          next(new Error('User already exist!'));
-        } else {
-          bcrypt.hash(password, 'hello', null, function(err, hash) {
-            if (err) {
-              next(new Error('hashinh failed'));
-            } else {
-              db.User.create({
-                username: req.body.username,
-                password: hash
-              })
-              .then(function(user) {
-                var token = jwt.encode(user, 'secret');
-                res.json({token: token});
-              })
-            }
-          });
-        }
       })
-      .fail(function (error) {
-        next(error);
+      .then(function(user) {
+        if (user) {
+          console.log('problem');
+          //next(new Error('User already exist!'));
+        } else {
+          db.User.create({
+            username: req.body.username,
+            pd: req.body.password
+          })
+          .then(function(userd) {
+            res.json(req.body.username);
+          })
+        }
       });
-
-    },
-
-    get: function (req, res) {
-      db.User.findAll()
-        .then(function(users) {
-          res.json(users);
-        });
-    },
-    post: function (req, res) {
-      db.User.findOrCreate({where: {username: req.body.username}})
-        // findOrCreate returns multiple resutls in an array
-        // use spread to assign the array to function arguments
-        .spread(function(user, created) {
-          res.sendStatus(created ? 201 : 200);
-        });
     }
+
+    // get: function (req, res) {
+    //   db.User.findAll()
+    //     .then(function(users) {
+    //       res.json(users);
+    //     });
+    // },
+    // post: function (req, res) {
+    //   db.User.findOrCreate({where: {username: req.body.username}})
+    //     // findOrCreate returns multiple resutls in an array
+    //     // use spread to assign the array to function arguments
+    //     .spread(function(user, created) {
+    //       res.sendStatus(created ? 201 : 200);
+    //     });
+    // }
   }
 };

@@ -7,9 +7,11 @@ angular.module('simon.auth', [])
   $scope.user = {};
 
   $scope.signin = function () {
+    console.log('user', $scope.user);
     Auth.signin($scope.user)
-      .then(function (token) {
-        $window.localStorage.setItem('com.simon', token);
+      .then(function (user) {
+        console.log('userobj', user);
+        $window.localStorage.setItem('com.simon-mvp', user);
         $location.path('/messages');
       })
       .catch(function (error) {
@@ -18,9 +20,12 @@ angular.module('simon.auth', [])
   };
 
   $scope.signup = function () {
+        console.log('user', $scope.user);
+
     Auth.signup($scope.user)
-      .then(function (token) {
-        $window.localStorage.setItem('com.simon', token);
+      .then(function (user) {
+        console.log('return user', user);
+        $window.localStorage.setItem('com.simon-mvp', user);
         $location.path('/messages');
       })
       .catch(function (error) {

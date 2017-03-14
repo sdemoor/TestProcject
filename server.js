@@ -2,13 +2,15 @@
 
 var parser = require('body-parser');
 var methodOverride = require('method-override');
-var multer  = require('multer')
-var upload = multer({ dest: 'uploads/' }).any();
+var multer  = require('multer');
+var upload = multer({ dest: 'uploads/' }).any();//.any()
 
 //var router = require('./routes.js');
 //var router = require('./routes.js');
 var express = require('express');
 var app = express();
+app.disable('etag');
+
 module.exports.app = app;
 
 
@@ -33,33 +35,31 @@ var controllerfile = require('./upthefile/upthefiler');
 
 //Connect controller methods to their corresponding routes
   app.use(morgan('dev'));
-  app.use(parser.urlencoded({extended: true}));
-  //app.use(parser.json());
+  //app.use(parser.urlencoded({extended: true}));
+  app.use( parser.json()); //"/api",
   //app.use('/', router);
-
-
-
-
 app.use(express.static(__dirname + '/client'));
-
-
-app.post('/api/file',  function hello(req, res, next) {
+app.post('/load/file', function hello(req, res, next) {
   // var storage = multer.({
   //       dest: 'uploads/'
   //   });
     // var uploa = multer({
     //     storage: storage
     // }).any();
+    console.log('reqfilesbefore', req.files);
     upload(req, res, function(err) {
         if (err) {
             console.log(err);
             return res.end('Error');
         } else {
-            console.log(req.body);
+          //controllerfile.sendUploadToGCS(req, res, next);
+          console.log('rbody', req.body);
+
             req.files.forEach(function(item) {
                 console.log('item',item);
-                var hello = {file: item};
-                controllerfile.sendUploadToGCS(hello, res, next);
+                var fileone = {file: item};
+                req.file = item;
+                controllerfile.sendUploadToGCS(req, res, next);
                 // move your file to destination
             });
             res.end('File uploaded');
@@ -75,7 +75,7 @@ app.post('/api/messages', controller.messages.post);
 
 app.post('/api/users/signin', controller.users.signin);
 
-app.post('/api/users/signup', controller.users.post);
+app.post('/api/users/signup', controller.users.signup);
 
 
 

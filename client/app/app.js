@@ -17,8 +17,8 @@ angular.module('simon', [
     })
     .when('/messages', {
       templateUrl: 'app/messages/messages.html',
-      controller: 'uploader',
-     authenticate: true
+      controller: 'uploader'
+     //authenticate: true
     })
     // .when('/shorten', {
     //   templateUrl: 'app/shorten/shorten.html',
@@ -40,30 +40,33 @@ angular.module('simon', [
       })
     }
   }
-}]).
-controller('uploader', ['$scope', '$http',
-  function($scope, $http) {
-    console.log('hi');
-    $scope.filesChanged = function(elm){
-      $scope.files = elm.files
-      $scope.$apply();
-    }
-    $scope.upload = function() {
-      var fd = new FormData()
-      angular.forEach($scope.files, function(file){
-        fd.append('file', file);
-      })
-      $http.post('/api/file', fd,
-      {
-        transformRequest: angular.identity,
-        headers:{'Content-Type':undefined}
-      })
-      .success(function(d) {
-        console.log(d);
-      })
-    }
-  }
-  ])
+}])
+// controller('uploader', ['$scope', '$http', '$window',
+//   function($scope, $http, $window) {
+
+//     console.log($window.localStorage.getItem('com.simon-mvp'));
+//     $scope.filesChanged = function(elm){
+//       $scope.files = elm.files
+//       $scope.$apply();
+//     }
+//     $scope.upload = function() {
+//       var fd = new FormData()
+//       angular.forEach($scope.files, function(file){
+//         fd.append('file', file);
+//       })
+//        var user = $window.localStorage.getItem('com.simon-mvp');
+//        fd.append('user', user);
+//       $http.post('/load/file', fd,
+//       {
+//         transformRequest: angular.identity,
+//         headers:{'Content-Type':undefined}
+//       })
+//       .success(function(d) {
+//         console.log(d);
+//       })
+//     }
+//   }
+//   ])
 
 
 
