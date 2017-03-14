@@ -8,18 +8,37 @@
 </div>
   <h1>Messages</h1>
 
+  <form
+
   <div class="link" ng-repeat="message in data.messages">
-
-
 
     <div class="title">{{message.text}}</div>
    <!--  <a href="{{link.baseUrl}}/{{link.code}}"> --><!-- {{link.baseUrl}}/{{link.code}}</a> -->
 
    </div>
+   <form ng-controller="uploader">
+     <input type="file" file-input="files" multiple />
+     <button ng-click="upload()">Upload</button>
+     <li ng-repeat="file in files">{{file.name}}</li>
+     </form>
 
+
+
+   <input type="text" ng-model="title">
+<input type="text" ng-model="text">
+<input type="file" file-model="myFile"/>
+<button ng-click="sendfile()">
+
+<!-- <form name="sendf" ng-submit='sendfile()'>
+  <input type='file' ng-model="file"
+  placeholder="upload file" required/>
+  <button>shorten</button>
+</form> -->
 
 
 
   <!-- Your html here -->
 
 </div>
+
+

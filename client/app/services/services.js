@@ -30,9 +30,30 @@ angular.module('simon.services', [])
   };
 
 
+ var uploadFileToUrl = function(file, title, text, uploadUrl){
+    var payload = new FormData();
+
+    payload.append("title", title);
+    payload.append('text', text);
+    payload.append('file', file);
+
+    return $http({
+        url: 'api/file',
+        method: 'POST',
+        data: payload,
+        //assign content-type as undefined, the browser
+        //will assign the correct boundary for us
+        headers: { 'Content-Type': undefined},
+        //prevents serializing payload.  don't do it.
+        transformRequest: angular.identity
+    });
+}
+
+
   return {
     getAll: getAll,
-    addOne: addOne
+    addOne: addOne,
+    uploadFileToUrl: uploadFileToUrl
   };
 
 })

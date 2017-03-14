@@ -3,6 +3,7 @@ angular.module('simon', [
   'simon.messages',
   'simon.auth',
   'ngRoute'
+  //"ng-files-model"
 ])
 .config(function ($routeProvider, $httpProvider) {
   $routeProvider
@@ -16,7 +17,7 @@ angular.module('simon', [
     })
     .when('/messages', {
       templateUrl: 'app/messages/messages.html',
-      controller: 'MessagesController',
+      controller: 'uploader',
      authenticate: true
     })
     // .when('/shorten', {
@@ -26,14 +27,52 @@ angular.module('simon', [
     // })
     .otherwise({
       redirectTo: '/messages'
-    });
+    })
+  })
+.directive('fileInput',['$parse', function($parse){
+  return {
+    restrict:'A',
+    link:function(scope, elm, attrs){
+      elm.bind('change', function(){
+        $parse(attrs.fileInput)
+        .assign(scope, elm[0].files)
+        scope.$apply()
+      })
+    }
+  }
+}]).
+controller('uploader', ['$scope', '$http',
+  function($scope, $http) {
+    console.log('hi');
+    $scope.filesChanged = function(elm){
+      $scope.files = elm.files
+      $scope.$apply();
+    }
+    $scope.upload = function() {
+      var fd = new FormData()
+      angular.forEach($scope.files, function(file){
+        fd.append('file', file);
+      })
+      $http.post('/api/file', fd,
+      {
+        transformRequest: angular.identity,
+        headers:{'Content-Type':undefined}
+      })
+      .success(function(d) {
+        console.log(d);
+      })
+    }
+  }
+  ])
+
+
 
 
 
     // We add our $httpInterceptor into the array
     // of interceptors. Think of it like middleware for your ajax calls
-  $httpProvider.interceptors.push('AttachTokens');
-})
+  //$httpProvider.interceptors.push('AttachTokens');
+
 .factory('AttachTokens', function ($window) {
   // this is an $httpInterceptor
   // its job is to stop all out going request
