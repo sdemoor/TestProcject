@@ -88,20 +88,20 @@ angular.module('simon.services', [])
     });
   };
 
-  var isAuth = function () {
-    return !!$window.localStorage.getItem('com.simon');
-  };
+  // var isAuth = function () {
+  //   return !!$window.localStorage.getItem('com.simon');
+  // };
 
-  var signout = function () {
-    $window.localStorage.removeItem('com.simon');
-    $location.path('/signin');
-  };
+  // var signout = function () {
+  //   $window.localStorage.removeItem('com.simon');
+  //   $location.path('/signin');
+  // };
 
 
   return {
     signin: signin,
     signup: signup,
-    isAuth: isAuth,
-    signout: signout
+    //isAuth: isAuth,
+    //signout: signout
   };
 });

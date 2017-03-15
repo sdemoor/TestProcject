@@ -31,22 +31,28 @@ angular.module('simon.messages', [])
     }
   $scope.data = {};
   $scope.user = $window.localStorage.getItem('com.simon-mvp');
-  if (!$scope.user) {
-    $location.path('/signin');
-  }
+
 
   $scope.logout = function() {
-    $window.localStorage.setItem('com.simon-mvp', undefined);
+    $window.localStorage.removeItem('com.simon-mvp');
     $location.path('/signin');
   }
 
   $scope.getAllFiles = function() {
     var user = {user: $window.localStorage.getItem('com.simon-mvp')};
-    FLIES.getAll(user)
-    .then(function(data) {
-      console.log('data:', data);
-      $scope.data.files = data;
-    });
+    console.log('user', typeof $window.localStorage.getItem('com.simon-mvp'));
+        console.log('user',  $window.localStorage.getItem('com.simon-mvp'));
+
+    if (angular.equals($window.localStorage.getItem('com.simon-mvp'), {}) ||  $window.localStorage.getItem('com.simon-mvp') === null) {
+      console.log('getout');
+      $scope.logout();
+    } else {
+      FLIES.getAll(user)
+      .then(function(data) {
+        console.log('data:', data);
+        $scope.data.files = data;
+      });
+    }
   }
    $scope.getAllFiles();
 

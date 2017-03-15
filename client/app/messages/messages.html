@@ -6,7 +6,6 @@
     <li> <a href="#/shorten"> <strong>Shorten</strong> </a></li> -->
   </ul>
 </div>
-  <h1>Messages</h1>
 
   <form
 
@@ -17,17 +16,20 @@
    <!--  <a href="{{link.baseUrl}}/{{link.code}}"> --><!-- {{link.baseUrl}}/{{link.code}}</a> -->
 
    </div>
+    <div class="link" >
    <form ng-controller="uploader">
      <input type="file" file-input="files" multiple />
      <button ng-click="upload()">Upload</button>
      <li ng-repeat="file in files">{{file.name}}</li>
      </form>
 
-<button ng-click="getAllFiles()">get files</button>
-<button ng-click="logout()">LOGOUT</button>
+      <button ng-click="getAllFiles()">get files</button>
+     <button ng-click="logout()">LOGOUT</button>
 
 
    <input type="text" ng-model="search" placeholder"filter" />
+   </div>
+
 
   <div class="link" ng-repeat="fil in data.files | filter:search |            orderBy:'created_at'">
 <!--     <img src="./assets/redirect_icon.png"/>

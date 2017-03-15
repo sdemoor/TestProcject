@@ -21,7 +21,7 @@ angular.module('simon', [
     })
 
     .otherwise({
-      redirectTo: '/messages'
+      redirectTo: '/signin'
     })
   })
 .directive('fileInput',['$parse', function($parse){
